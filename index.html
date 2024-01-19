@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Authentication</title>
+</head>
+<body>
+    <h1>Firebase Authentication</h1>
+    <button id="signInBtn">Sign In / Sign Up</button>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+      apiKey: "AIzaSyCpVA5MZNF3CIfISIfJdrDGnFpYYFuiwZM",
+      authDomain: "pre-cryptic-hunt.firebaseapp.com",
+      databaseURL: "https://pre-cryptic-hunt-default-rtdb.firebaseio.com",
+      projectId: "pre-cryptic-hunt",
+      storageBucket: "pre-cryptic-hunt.appspot.com",
+      messagingSenderId: "159924093216",
+      appId: "1:159924093216:web:725dfc274f420512c75745",
+      measurementId: "G-3KB6L92MQ8"
+    };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var database = firebase.database();
+
+        // Firebase Authentication Script
+        document.getElementById('signInBtn').addEventListener('click', function () {
+            var provider = new firebase.auth.GoogleAuthProvider();
+
+            firebase.auth().signInWithPopup(provider).then(function (result) {
+                var user = result.user;
+
+                // Save user data to Firebase Database under 'Users'
+                var userRef = database.ref('Users/' + user.uid);
+                userRef.set({
+                    score: 0
+                });
+
+                // Redirect to the quiz page
+                window.location.href = "quiz.html";
+            }).catch(function (error) {
+                console.error("Authentication error:", error);
+            });
+        });
+    </script>
+</body>
+</html>
